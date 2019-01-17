@@ -136,8 +136,7 @@ cobj_create(cobj_class_t cls)
 	if (cls->size < sizeof(struct cobj))
 		return (NULL);
 
-	obj = calloc(1, cls->size);
-	if (obj == NULL)
+	if ((obj = calloc(1, cls->size)) == NULL)
 		return (NULL);
 	
 	if (cobj_init(obj, cls) != 0) {

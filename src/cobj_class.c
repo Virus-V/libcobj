@@ -113,9 +113,8 @@ cobj_class_compile(cobj_class_t cls)
 
 	/*
 	 * Allocate space for the compiled ops table.
-	 */
-	ops = calloc(1, sizeof(struct cobj_ops)); 
-	if (ops == NULL) 
+	 */ 
+	if ((ops = calloc(1, sizeof(struct cobj_ops))) == NULL) 
 		return (-1);
 
 	COBJ_LOCK();
@@ -222,12 +221,10 @@ cobj_call_method_at_mi(cobj_class_t cls, cobjop_desc_t desc)
 	cobj_method_t *ce;
 	cobj_class_t *basep;
 
-	ce = cobj_call_method_at_class(cls, desc);
-	if (ce != NULL)
+	if ((ce = cobj_call_method_at_class(cls, desc)) != NULL)
 		return (ce);
 
-	basep = cls->baseclasses;
-	if (basep != NULL) {
+	if ((basep = cls->baseclasses) != NULL) {
 		for (; *basep; basep++) {
 			ce = cobj_call_method_at_mi(*basep, desc);
 			if (ce != NULL)
@@ -245,8 +242,7 @@ cobj_call_method(cobj_class_t cls,
 {
 	cobj_method_t *ce;
 
-	ce = cobj_call_method_at_mi(cls, desc);
-	if (ce == NULL)
+	if ((ce = cobj_call_method_at_mi(cls, desc)) == NULL)
 		ce = &desc->deflt;
 	
 	if (cep != NULL)

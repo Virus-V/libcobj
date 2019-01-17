@@ -29,6 +29,10 @@
 #ifndef _COBJ_H_
 #define _COBJ_H_
 
+#define	COBJ_LOCK()
+#define	COBJ_UNLOCK()
+#define	COBJ_ASSERT(what)
+
 /*
  * Forward declarations
  */
@@ -241,7 +245,7 @@ int		cobj_init(cobj_t obj, cobj_class_t cls);
 int		cobj_init_static(cobj_t obj, cobj_class_t cls);
 
 /*
- * Delete an object. If mtype is non-zero, free the memory.
+ * Delete an object.
  */
 int		cobj_delete(cobj_t obj);
 
@@ -255,11 +259,5 @@ cobj_method_t * cobj_call_method(cobj_class_t cls,
  * Default method implementation.
  */
 int	cobj_nop(void);
-
 __END_DECLS
-
-#define	COBJ_LOCK()
-#define	COBJ_UNLOCK()
-#define	COBJ_ASSERT(what)
-
 #endif /* !_COBJ_H_ */
