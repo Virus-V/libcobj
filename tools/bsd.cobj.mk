@@ -1,3 +1,6 @@
+
+_AWK= 	/usr/bin/awk
+
 # Build _if.[ch] from _if.m, and clean them when we're done.
 __MPATH!=find ${.CURDIR:tA}/ -name \*_if.m
 _MFILES=${__MPATH:T:O}

@@ -1,6 +1,4 @@
 
-_AWK= 	/usr/bin/awk
-
 LDADD=  -lcobj
 
 PROG=	foo
