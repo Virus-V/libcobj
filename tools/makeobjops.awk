@@ -433,6 +433,7 @@ for (file_i = 0; file_i < num_files; file_i++) {
 	    "#include <sys/cdefs.h>\n" \
 	    "#include <sys/types.h>\n" \
 	    "#include <sys/queue.h>\n" \
+	    "#include <sys/sbuf.h>\n" \	    
 	    "#include <stdlib.h>\n" \
 	    "#include <stdio.h>\n" \
 	    "#include <libcobj.h>");

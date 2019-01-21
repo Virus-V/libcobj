@@ -117,7 +117,7 @@ cobj_class_compile(cobj_class_t cls)
 	if ((ops = calloc(1, sizeof(struct cobj_ops))) == NULL) 
 		return (-1);
 
-	COBJ_LOCK();
+	sem_wait(&cobj_lock);
 	
 	/*
 	 * We may have lost a race for cobj_class_compile here - check
@@ -125,11 +125,11 @@ cobj_class_compile(cobj_class_t cls)
 	 * class.
 	 */
 	if (cls->ops != NULL) {
-		COBJ_UNLOCK();
+		sem_post(&cobj_lock);
 		free(ops);
 	} else {
 		cobj_class_compile_common(cls, ops);
-		COBJ_UNLOCK();
+		sem_post(&cobj_lock);
 	}
 	
 	return (0);
@@ -168,7 +168,7 @@ cobj_class_free(cobj_class_t cls)
 	if (cls == NULL)
 		return (-1);
 	
-	COBJ_LOCK();
+	sem_wait(&cobj_lock);
 
 	/*
 	 * Protect against a race between cobj_create and cobj_delete.
@@ -186,7 +186,7 @@ cobj_class_free(cobj_class_t cls)
 		cls->ops = NULL;
 	}
 	
-	COBJ_UNLOCK();
+	sem_post(&cobj_lock);
 
 	if (ops != NULL)
 		free(ops);

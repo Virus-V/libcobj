@@ -7,6 +7,8 @@ SRCS=	cobj_class.c cobj.c
 INCS=	libcobj.h 
 NO_MAN= 
 
+LIBADD+= -lpthread -lrt
+
 CFLAGS+= -I${.CURDIR}
 
 .include <bsd.lib.mk>

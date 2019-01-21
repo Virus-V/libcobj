@@ -29,8 +29,11 @@
 #ifndef _COBJ_H_
 #define _COBJ_H_
 
-#define	COBJ_LOCK()
-#define	COBJ_UNLOCK()
+#include <semaphore.h>
+
+/* XXX: well, ... sem(4)??? */
+extern sem_t cobj_lock;
+
 #define	COBJ_ASSERT(what)
 
 /*

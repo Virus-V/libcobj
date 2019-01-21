@@ -52,7 +52,9 @@
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
+#include <err.h>
 #include <stdlib.h>
+#include <sysexits.h>
 
 #include <libcobj.h>
 
@@ -60,6 +62,8 @@
 u_int kobj_lookup_hits = 0;
 u_int kobj_lookup_misses = 0;
 #endif
+
+sem_t cobj_lock;
 
 /*
  * Allocate and initialize the new object.
@@ -99,7 +103,7 @@ cobj_init(cobj_t obj, cobj_class_t cls)
 	if (obj == NULL)
 		return (-1);
 retry:
-	COBJ_LOCK();
+	sem_wait(&cobj_lock);
 
 	/*
 	 * Consider compiling the class' method table.
@@ -110,7 +114,7 @@ retry:
 		 * because of the call to calloc(3) - we drop the lock
 		 * and re-try.
 		 */
-		COBJ_UNLOCK();
+		sem_post(&cobj_lock);
 		
 		if (cobj_class_compile(cls) != 0)	
 			return (-1);
@@ -120,7 +124,7 @@ retry:
 
 	cobj_init_common(obj, cls);
 
-	COBJ_UNLOCK();
+	sem_post(&cobj_lock);
 	
 	return (0);
 }
@@ -167,10 +171,10 @@ cobj_delete(cobj_t obj)
 	 * should defer this for a short while to avoid thrashing.
 	 */
 	COBJ_ASSERT(MA_NOTOWNED);
-	COBJ_LOCK();
+	sem_wait(&cobj_lock);
 	cls->refs--;
 	refs = cls->refs;
-	COBJ_UNLOCK();
+	sem_post(&cobj_lock);
 
 	if (refs == 0)
 		cobj_class_free(cls);
@@ -179,4 +183,25 @@ cobj_delete(cobj_t obj)
 	free(obj);
 
 	return (0);
+}
+
+/*
+ * Initialize POSIX semaphore.
+ */
+static __attribute__((constructor)) void  
+cobj_ctor(void)
+{
+	
+	if (sem_init(&cobj_lock, 0, 1) != 0)
+		errx(EX_OSERR, "%s: sem_init(3) failed.", __func__);
+}
+
+/*
+ * Finalize.
+ */
+static __attribute__((destructor)) void
+cobj_dtor(void)
+{
+	
+	(void)(sem_destroy)(&cobj_lock);
 }
