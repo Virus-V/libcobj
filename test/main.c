@@ -36,12 +36,25 @@ main(int argc, char *argv[])
 {
 	cobj_t o;
 	
+	/* 
+	 * Allocate and map its class and 
+	 * call default implementation of 
+	 * foo_bar(3) method.
+	 */
 	o = cobj_create(&null_class);
 	FOO_BAR(o);
 	
+	/* 
+	 * Change its type and call the specific
+	 * implementation of foo_bar(3) method.
+	 */
 	cobj_class_free(&null_class);
 	cobj_init(o, &foo_class);
 	FOO_BAR(o);
+	
+	/* 
+	 * Try to call a not implemented method. 
+	 */
 	FOO_BAZ(o, 1);
 	
 	exit(EX_OK);
