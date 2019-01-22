@@ -54,7 +54,7 @@ METHOD void bar {
 # Signature for public foo_baz(3) method 
 # for cobj(3) instance of cobj_class(3).
 #
-#  [ret = ] FOO_BAR(object [, args]);
+#  [ret = ] FOO_BAZ(object, arg);
 #
 METHOD void baz {
 	cobj_t o;
