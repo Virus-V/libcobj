@@ -42,6 +42,7 @@ main(int argc, char *argv[])
 	cobj_class_free(&null_class);
 	cobj_init(o, &foo_class);
 	FOO_BAR(o);
+	FOO_BAZ(o, 1);
 	
 	exit(EX_OK);
 }

@@ -49,3 +49,14 @@ CODE {
 METHOD void bar {
 	cobj_t o;
 } DEFAULT foo_common;
+
+#
+# Signature for public foo_baz(3) method 
+# for cobj(3) instance of cobj_class(3).
+#
+#  [ret = ] FOO_BAR(object [, args]);
+#
+METHOD void baz {
+	cobj_t o;
+	int arg;
+} DEFAULT;
