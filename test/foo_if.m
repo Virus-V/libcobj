@@ -36,7 +36,8 @@ CODE {
 	static void 
 	foo_common(cobj_t o)
 	{
-		(void)printf("%s: ... \n", __func__);
+		(void)printf("%s: instance of %s_class \n", 
+			__func__, o->ops->cls->name);
 	}
 };
 
@@ -59,4 +60,15 @@ METHOD void bar {
 METHOD void baz {
 	cobj_t o;
 	int arg;
-} DEFAULT;
+};
+
+#
+# Signature for public statically defined 
+# foo_static_bar(3) method of cobj_class(3).
+#
+#  [ret = ] FOO_STATIC_BAR(class [, args]);
+#
+STATICMETHOD void static_bar {
+	cobj_class_t c;
+};
+

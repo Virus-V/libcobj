@@ -16,16 +16,28 @@ static cobj_method_t null_methods[] = {
 DEFINE_CLASS(null, null_methods, sizeof(struct cobj));
 
 /*
- * Generic class implements specific method.
+ * Generic class implements specific methods.
  */
 static void
 own_method(cobj_t o)
 {
-	(void)printf("%s: ... \n", __func__);
+	(void)printf("%s: instance of %s_class \n", 
+		__func__, o->ops->cls->name);
+}
+
+static void
+own_static_method(cobj_t o)
+{
+	cobj_class_t c;
+	
+	c = (cobj_class_t)o;
+	
+	(void)printf("%s: of %s_class \n", __func__, c->name);
 }
 
 static cobj_method_t foo_methods[] = {
-	COBJ_METHOD(foo_bar,	own_method),
+	COBJ_METHOD(foo_bar,			own_method),
+	COBJ_METHOD(foo_static_bar,		own_static_method),
 	COBJ_METHOD_END
 };
 
@@ -36,9 +48,16 @@ main(int argc, char *argv[])
 {
 	cobj_t o;
 	
+	/*
+	 * Initialize foo_class(3) and call its 
+	 * statically defined method, if any.
+	 */
+	cobj_class_compile(&foo_class);
+	FOO_STATIC_BAR(&foo_class);
+	
 	/* 
-	 * Allocate and map its class and 
-	 * call default implementation of 
+	 * Allocate and map its class and call 
+	 * its default implementation for the
 	 * foo_bar(3) method.
 	 */
 	o = cobj_create(&null_class);
