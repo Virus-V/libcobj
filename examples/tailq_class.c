@@ -32,7 +32,7 @@
 #include <libcobj.h>
 
 /*
- * Example implements a simple queue.
+ * Example for a simplefied queue(3).
  */
 
 #include "tailq_if.h"
@@ -52,7 +52,7 @@ struct tailq_item {
 };
 
 /*
- * Instance of tailq_class(3).
+ * Software-context for an instance of tailq_class(3).
  */
 struct tailq_obj {
 	COBJ_FIELDS;
@@ -97,13 +97,14 @@ tailq_poll(cobj_t o)
 	if ((to = (tailq_obj_t)o) == NULL)
 		return (NULL);
 	
-	ti = TAILQ_FIRST(&to->to_cache);
-	if (ti == NULL) 
+	if ((ti = TAILQ_FIRST(&to->to_cache)) == NULL) 
 		return (NULL);
 	
 	TAILQ_REMOVE(&to->to_cache, ti, ti_next);	
+	
 	data = ti->ti_data;
 	ti->ti_data = NULL;
+	
 	free(ti);
 	
 	return (data);
@@ -139,8 +140,7 @@ tailq_create(cobj_class_t c)
 {
 	tailq_obj_t to;
 	
-	to = (tailq_obj_t)cobj_create(c);
-	if (to == NULL)
+	if ((to = (tailq_obj_t)cobj_create(c)) == NULL)
 		return (NULL);
 	
 	TAILQ_INIT(&to->to_cache);

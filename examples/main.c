@@ -73,7 +73,7 @@ DEFINE_CLASS(foo, foo_methods, sizeof(struct cobj));
  * Import tailq_class(3).
  */
 #include "tailq_if.h" 
- 
+
 DECLARE_CLASS(tailq_class);
 
 int item_a = 1;
